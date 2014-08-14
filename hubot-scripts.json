@@ -1,1 +1,21 @@
-["redis-brain.coffee", "shipit.coffee"]
+[
+"redis-brain.coffee",
+"shipit.coffee",
+"ackbar.coffee",
+"advice.coffee",
+"announce.coffee",
+"applause.coffee",
+"calm-down.coffee",
+"catfacts.coffee",
+"deadline.coffee",
+"dealwithit.coffee",
+"decide.coffee",
+"dice.coffee",
+"dilbert.coffee",
+"hello.coffee",
+"stallman.coffee",
+"tasks.coffee",
+"uptime.coffee",
+"wat.coffee",
+"xkcd.coffee"
+]
