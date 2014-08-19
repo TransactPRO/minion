@@ -1,18 +1,17 @@
 # Description:
-#  Initializes simple sms transaction with charge
+#  Initializes simple transaction with charge
 #
 # Commands:
 #  hubot charge me <amount to charge in MINOR units>
 #  hubot charge <amount> <routing string> <guid>
 
-misc = require('../misc.js');
-config = require('../config.js');
+sha1 = require('sha1');
 
-apiUrl  = config.apiUrl
-guid    = config.guid
-pwd     = config.pwd
-rs      = config.rs
-user_ip = config.user_ip
+apiUrl  = process.env.HUBOT_TPRO_API_URL
+guid    = process.env.HUBOT_TPRO_GUID
+pwd     = process.env.HUBOT_TPRO_PWD
+rs      = process.env.HUBOT_TPRO_RS
+user_ip = process.env.HUBOT_TPRO_USER_IP
 
 module.exports = (robot) ->
   robot.respond /charge me (.*)/i, (msg) ->
@@ -22,10 +21,10 @@ module.exports = (robot) ->
       data = require('querystring').stringify({
         'apiUrl'                  : apiUrl,
         'guid'                    : guid,
-        'pwd'                     : misc.sha1(pwd),
+        'pwd'                     : sha1(pwd),
         'verifySSL'               : false,
         'rs'                      : rs,
-        'merchant_transaction_id' : misc.time(),
+        'merchant_transaction_id' : (new Date().getTime()),
         'user_ip'                 : user_ip,
         'description'             : 'Test description',
         'amount'                  : msg.match[1],
