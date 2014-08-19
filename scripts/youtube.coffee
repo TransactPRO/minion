@@ -2,10 +2,10 @@
 #   Messing around with the YouTube API.
 #
 # Commands:
-#   hubot youtube me <query> - Searches YouTube for the query and returns the video embed link.
+#   hubot youtube|ютуб <запрос> - Ищет в Youtube видео по заданному запросу
 module.exports = (robot) ->
-  robot.respond /(youtube|yt)( me)? (.*)/i, (msg) ->
-    query = msg.match[3]
+  robot.respond /(youtube|yt|ютуб) (.*)/i, (msg) ->
+    query = msg.match[2]
     robot.http("http://gdata.youtube.com/feeds/api/videos")
       .query({
         orderBy: "relevance"
@@ -18,7 +18,7 @@ module.exports = (robot) ->
         videos = videos.feed.entry
 
         unless videos?
-          msg.send "No video results for \"#{query}\""
+          msg.send "По запросу \"#{query}\" видео не найдено."
           return
 
         video  = msg.random videos

@@ -2,8 +2,8 @@
 #   Allows Hubot to know many languages.
 #
 # Commands:
-#   hubot translate me <phrase> - Searches for a translation for the <phrase> and then prints that bad boy out.
-#   hubot translate me from <source> into <target> <phrase> - Translates <phrase> from <source> into <target>. Both <source> and <target> are optional
+#   hubot переведи мне <фраза> - Переводит заданную фразу.
+#   hubot переведи мне из <источник> в <нужный> <фраза> - Переводит заданную фразу из заданного языка в нужный.
 
 languages =
   "af": "Afrikaans",
@@ -77,9 +77,9 @@ getCode = (language,languages) ->
 
 module.exports = (robot) ->
   language_choices = (language for _, language of languages).sort().join('|')
-  pattern = new RegExp('translate(?: me)?' +
-                       "(?: from (#{language_choices}))?" +
-                       "(?: (?:in)?to (#{language_choices}))?" +
+  pattern = new RegExp('переведи(?: мне)?' +
+                       "(?: из (#{language_choices}))?" +
+                       "(?: (?:in)?в (#{language_choices}))?" +
                        '(.*)', 'i')
   robot.respond pattern, (msg) ->
     term   = "\"#{msg.match[3]}\""
