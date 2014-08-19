@@ -4,7 +4,7 @@
 
 ```shell
 $ cd <minion_dir>
-$ ./bin/hubot_hipchat >> phantomjsDaemon.log 2>&1 &
+$ ./bin/hubot_hipchat >> hubot.log 2>&1 &
 ```
 
 ### Testing Hubot Locally
