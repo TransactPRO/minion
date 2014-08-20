@@ -25,7 +25,8 @@
     "hubot-scripts": ">= 2.5.0 < 3.0.0",
     "hubot-hipchat": "~2.7.5",
     "htmlparser": "1.7.6",
-    "nodepie": "0.5.0"
+    "nodepie": "0.5.0",
+    "sha1": "1.1.0"
   },
   "engines": {
     "node": ">= 0.8.x",

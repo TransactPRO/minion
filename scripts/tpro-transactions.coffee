@@ -7,6 +7,9 @@
 #  HUBOT_TPRO_PWD - пароль торговца
 #  HUBOT_TPRO_RS - строка маршрутизации
 #  HUBOT_TPRO_USER_IP - IP пользователя
+#  HUBOT_TPRO_CC - номер кредитной карты
+#  HUBOT_TPRO_CVV - cvv
+#  HUBOT_TPRO_EXPIRE - срок годности карты
 #
 # Commands:
 #  hubot charge|сними <сумма в MINOR величине>
@@ -21,6 +24,9 @@ guid    = process.env.HUBOT_TPRO_GUID
 pwd     = process.env.HUBOT_TPRO_PWD
 rs      = process.env.HUBOT_TPRO_RS
 user_ip = process.env.HUBOT_TPRO_USER_IP
+cc      = process.env.HUBOT_TPRO_CC
+cvv     = process.env.HUBOT_TPRO_CVV
+expire  = process.env.HUBOT_TPRO_EXPIRE
 
 module.exports = (robot) ->
   robot.respond /(charge|сними) (.*)/i, (msg) ->
@@ -54,14 +60,15 @@ module.exports = (robot) ->
       msg.http(apiUrl + "gwprocessor2.php?a=init")
         .header('content-type', 'application/x-www-form-urlencoded')
         .post(data) (err, res, body) ->
+          msg.send res.statusCode + "\n" + body
           arr = body.split(':')
 
           chargeData = require('querystring').stringify({
             'f_extended'              : '5',
             'init_transaction_id'     : arr[1],
-            'cc'                      : '5413330000000027',
-            'cvv'                     : '111',
-            'expire'                  : '01/15'})
+            'cc'                      : cc,
+            'cvv'                     : cvv,
+            'expire'                  : expire})
 
           msg.http(apiUrl + "gwprocessor2.php?a=charge")
             .header('content-type', 'application/x-www-form-urlencoded')
