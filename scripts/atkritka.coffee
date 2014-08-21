@@ -273,12 +273,29 @@ DMap =
   1108: 186
   1109: 190
 
+randInt = (min, max) ->
+  return Math.floor(Math.random()*(max - min + 1) + min)
+
 module.exports = (robot) ->
   robot.hear /(аткрытка|аткрытка мне) (.*)/i, (msg) ->
-    rnd = Math.floor(Math.random()*(4 - 2 + 1) + 2);
+
+    imgPath = "body > div.wrapper > div.content > div img"
+    countPath = "body > div.wrapper > div.content > div > ul:nth-child(4) > li.text"
     tag = unicodeToWin1251_UrlEncoded(msg.match[2])
     jsdom.env(
-      "http://atkritka.com/search/?tags=&q=#{tag}&PAGEN_1=#{rnd}",
+      "http://atkritka.com/search/?tags=&q=#{tag}",
       ["http://code.jquery.com/jquery.js"], (errors, window) ->
-        msg.send window.$("img")[rnd].src
+        pagesCount = window.$(countPath).text().split(" ")[0]
+        window.close()
+        if pagesCount > 0
+          rndPage = randInt(1, pagesCount);
+          jsdom.env(
+            "http://atkritka.com/search/?tags=&q=#{tag}&PAGEN_1=#{rndPage}",
+            ["http://code.jquery.com/jquery.js"], (errors, window) ->
+              imgCount = window.$(imgPath).length
+              msg.send window.$(imgPath)[randInt(0, imgCount - 1)].src
+              window.close()
+          );
+        else
+          msg.send "Я не нашел ничего :("
     );
