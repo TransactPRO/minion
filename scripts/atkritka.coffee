@@ -1,10 +1,46 @@
 # Description:
 #  Выбирает аткрытку с atkritka.com
 #
+# Dependencies:
+#  "jsdom": 1.0.0-pre.1
+#
 # Commands:
 #  (аткрытка|аткрытка мне) <тег аткрытки> - Выбирает случайную аткрытку с Atkritka.com
 
 jsdom = require("jsdom");
+
+module.exports = (robot) ->
+  robot.hear /(аткрытка|аткрытка мне) (.*)/i, (msg) ->
+    tag = unicodeToWin1251_UrlEncoded msg.match[2].toLowerCase()
+    getPageCount tag, (pageCount) ->
+      if pageCount > 0
+        rndPage = randInt 1, pageCount
+        getImage tag, rndPage, (url) ->
+          msg.send url
+      else
+        msg.send "Я не нашел Аткрытку :("
+
+randInt = (min, max) ->
+  return Math.floor(Math.random()*(max - min + 1) + min)
+
+getImage = (tag, rndPage, callback) ->
+  url = ""
+  jsdom.env(
+    "http://atkritka.com/search/?tags=&q=#{tag}&PAGEN_1=#{rndPage}",
+    ["http://code.jquery.com/jquery.js"], (errors, window) ->
+      imgCount = window.$("body > div.wrapper > div.content > div img").length
+      url = window.$("body > div.wrapper > div.content > div img")[randInt(0, imgCount - 1)].src
+      window.close()
+      callback(url));
+
+getPageCount = (tag, callback) ->
+  pageCount = 0
+  jsdom.env(
+    "http://atkritka.com/search/?tags=&q=#{tag}",
+    ["http://code.jquery.com/jquery.js"], (errors, window) ->
+      pageCount = parseInt(window.$("body > div.wrapper > div.content > div > ul:nth-child(4) > li.text").text().split(" ")[0])
+      window.close()
+      callback(pageCount));
 
 unicodeToWin1251_UrlEncoded = (s) ->
   L = []
@@ -16,6 +52,7 @@ unicodeToWin1251_UrlEncoded = (s) ->
     L.push "%" + DMap[ord].toString(16)
     i++
   L.join("").toUpperCase()
+
 DMap =
   0: 0
   1: 1
@@ -272,30 +309,3 @@ DMap =
   8217: 146
   1108: 186
   1109: 190
-
-randInt = (min, max) ->
-  return Math.floor(Math.random()*(max - min + 1) + min)
-
-module.exports = (robot) ->
-  robot.hear /(аткрытка|аткрытка мне) (.*)/i, (msg) ->
-
-    imgPath = "body > div.wrapper > div.content > div img"
-    countPath = "body > div.wrapper > div.content > div > ul:nth-child(4) > li.text"
-    tag = unicodeToWin1251_UrlEncoded(msg.match[2])
-    jsdom.env(
-      "http://atkritka.com/search/?tags=&q=#{tag}",
-      ["http://code.jquery.com/jquery.js"], (errors, window) ->
-        pagesCount = window.$(countPath).text().split(" ")[0]
-        window.close()
-        if pagesCount > 0
-          rndPage = randInt(1, pagesCount);
-          jsdom.env(
-            "http://atkritka.com/search/?tags=&q=#{tag}&PAGEN_1=#{rndPage}",
-            ["http://code.jquery.com/jquery.js"], (errors, window) ->
-              imgCount = window.$(imgPath).length
-              msg.send window.$(imgPath)[randInt(0, imgCount - 1)].src
-              window.close()
-          );
-        else
-          msg.send "Я не нашел ничего :("
-    );
