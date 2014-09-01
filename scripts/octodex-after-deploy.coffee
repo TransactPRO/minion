@@ -14,8 +14,11 @@
 #  skibish
 
 module.exports = (robot) ->
-  robot.hear /finished deploying/i, (msg) ->
+  robot.hear /(finished deploying)|(Finish gw2:deploy_code)/i, (msg) ->
     msg.send msg.random octodex
+
+  robot.hear /(cancelled deployment)|(failed deployment)/i, (msg) ->
+    msg.reply "http://storage1.censor.net.ua/images/e/7/2/e/e72e8d4eb4f83a233d3b4e188f22f02f/original.jpg"
 
 octodex = [
   "https://octodex.github.com/images/saritocat.png",
