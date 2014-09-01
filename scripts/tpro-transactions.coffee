@@ -33,7 +33,6 @@ module.exports = (robot) ->
   robot.respond /(charge|сними) (.*)/i, (msg) ->
     input = msg.match[2].split(" ")
     amount = input[0]
-    console.log(input[1])
     currency = 'USD'
     if input[1] != undefined
       currency = input[1].toUpperCase()
@@ -67,6 +66,7 @@ module.exports = (robot) ->
         .header('content-type', 'application/x-www-form-urlencoded')
         .post(data) (err, res, body) ->
           arr = body.split(':')
+          message = body
 
           chargeData = require('querystring').stringify({
             'f_extended' : '5',
@@ -79,7 +79,20 @@ module.exports = (robot) ->
             .header('content-type', 'application/x-www-form-urlencoded')
             .post(chargeData) (err, res, body) ->
               if body.split(":")[0] == 'ERROR'
-                msg.send body
+                msg.send message
+              else if body.split(":")[0] == 'Redirect'
+                msg.send "Я 3D делать не буду :["
               else
                 msg.send body
                 msg.send "С Вашей карты было снято #{amount/100} #{currency}"
+
+                refundData = require('querystring').stringify({
+                  'account_guid': guid,
+                  'pwd': sha1(pwd),
+                  'init_transaction_id': arr[1],
+                  'amount_to_refund': amount})
+
+                msg.http(apiUrl + "gwprocessor2.php?a=refund")
+                  .header('content-type', 'application/x-www-form-urlencoded')
+                  .post(refundData) (err, res, body) ->
+                     msg.send body
