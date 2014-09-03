@@ -84,7 +84,6 @@ module.exports = (robot) ->
                 else
                   msg.send message.replace("<pre>","")
               else if (body.indexOf('Redirect') > -1)
-                console.log("OKR")
                 msg.send "Я 3D или редирект на гейт делать не буду :E]"
               else
                 msg.send body
