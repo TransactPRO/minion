@@ -78,10 +78,13 @@ module.exports = (robot) ->
           msg.http(apiUrl + "gwprocessor2.php?a=charge")
             .header('content-type', 'application/x-www-form-urlencoded')
             .post(chargeData) (err, res, body) ->
-              if body.split(":")[0] == 'ERROR'
-                msg.send message
-              else if body.split(":")[0] == 'Redirect'
-                msg.send "Я 3D делать не буду :["
+              if (body.indexOf('ERROR') > -1)
+                if (message.indexOf('OK') > -1)
+                  msg.send body
+                else
+                  msg.send message.replace("<pre>","")
+              else if (body.indexOf('Redirect') > -1)
+                msg.send "Я 3D или редирект на гейт делать не буду :E]"
               else
                 msg.send body
                 msg.send "С Вашей карты было снято #{amount/100} #{currency}"
