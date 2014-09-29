@@ -27,7 +27,8 @@
     "htmlparser": "1.7.6",
     "nodepie": "0.5.0",
     "sha1": ">=1.1.0",
-    "hubot-atkritka": "*"
+    "hubot-atkritka": "*",
+    "hubot-weather":"*"
   },
   "engines": {
     "node": ">= 0.8.x",
