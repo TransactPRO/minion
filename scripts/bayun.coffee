@@ -10,6 +10,4 @@ module.exports = (robot) ->
     msg.http("http://rzhunemogu.ru/RandJSON.aspx?CType=1")
       .header('User-Agent', 'Mozilla/5.0')
       .get() (err, res, body) ->
-          data = JSON.parse body
-          content = data.content
-          msg.send "Анекдот: #{content}"
+          msg.send JSON.parse(body).content
