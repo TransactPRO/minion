@@ -51,7 +51,6 @@ octodex = [
   "https://octodex.github.com/images/dodgetocat_v2.png",
   "https://octodex.github.com/images/stormtroopocat.png",
   "https://octodex.github.com/images/pusheencat.png",
-  "https://octodex.github.com/images/deckfailcat.png",
   "https://octodex.github.com/images/murakamicat.png",
   "https://octodex.github.com/images/homercat.png",
   "https://octodex.github.com/images/minion.png",
